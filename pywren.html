@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Microservices and Teraflops - pywren</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="/pywren.html">
+
+        <meta name="author" content="Eric Jonas" />
+        <meta name="keywords" content="python" />
+        <meta name="description" content="Can AWS Lambda be used for scientific computing ?" />
+
+        <meta property="og:site_name" content="pywren" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Microservices and Teraflops"/>
+        <meta property="og:url" content="/pywren.html"/>
+        <meta property="og:description" content="Can AWS Lambda be used for scientific computing ?"/>
+        <meta property="article:published_time" content="2016-10-25" />
+            <meta property="article:section" content="benchmarks" />
+            <meta property="article:tag" content="python" />
+            <meta property="article:author" content="Eric Jonas" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="/theme/css/bootstrap.flatly.min.css" type="text/css"/>
+    <link href="/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">
+pywren            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                    <li><a href="archives.html">blog</a></li>
+                         <li><a href="/pages/docs.html">
+                             documentation
+                          </a></li>
+                         <li><a href="/pages/examples.html">
+                             examples
+                          </a></li>
+                         <li><a href="/pages/gettingstarted.html">
+                             getting started
+                          </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="/pywren.html"
+                       rel="bookmark"
+                       title="Permalink to Microservices and Teraflops">
+                        Microservices and Teraflops
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2016-10-25T00:00:00-07:00"> Tue 25 October 2016</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="/tag/python.html">python</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <h2>Extracting 25 TFLOPS from AWS Lambda, or #TheCloudIsTooDamnHard</h2>
+<p>Recently at the Berkeley Center for Computational Imaging weekly
+lunch, my wonderful
+colleague <a href="http://shivaram.org/">Shivaram Venkataraman</a> from
+the <a href="https://amplab.cs.berkeley.edu/">AMP Lab</a> explained cloud
+infrastructure to a smart group of physicists, electrical engineers,
+applied mathematicians, and biologists. Even focusing on great
+technologies like <a href="http://spark.apache.org/">Spark</a>
+and <a href="http://dask.pydata.org/en/latest/">Dask</a> the conclusion was that
+#thecloudistoodamnhard. There is a tremendous activation energy in 
+provisioning servers, worrying about piecewise-constant resource pricing
+and complex storage models, and doing devops work. <a href="https://www2.eecs.berkeley.edu/Faculty/Homepages/yirenng.html">Professor Ren Ng</a> asked
+why there was no "cloud button" that one could push and instantly have
+their current environment up and running on cloud-hosted infrastructure. </p>
+<p>And recently, my friend and cofounder @BeauCronin has been tweeting about <a href="https://twitter.com/search?q=%23thecloudiwant&amp;src=typd">#TheCloudIWant</a> :
+<blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/TheCloudIWant?src=hash">#TheCloudIWant</a> charges me for ~only and exactly~ what I use, and I never have to provision or reserve capacity for any resource.</p>&mdash; Beau Cronin (@beaucronin) <a href="https://twitter.com/beaucronin/status/788756820315607041">October 19, 2016</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+<p>I think all of this criticism and pining for "something better" is quite correct.
+While a fraction of my time involves scaling distributed compute
+to TB datasets across hundreds of machines, a lot of what I do
+is embarrassingly parallel jobs doing hyperparameter sweeps, Monte Carlo
+simulations of physical systems, and validation of datasets. I get an
+algorithm working and then immediately think "I want to test this on
+100 input datasets" and then write a for loop and learn to be patient. </p>
+<p>There has to be a better way. </p>
+<p>Given I sit in the AMP Lab, why not Spark? The spark programming model still
+requires the provisioning of dedicated servers and currently has poor support
+for elasticity. Additionally, there are a lot of complications with pyspark
+that make getting started a challenge. If someone had a robust local cluster,
+there might be a universe where pyspark would be easy enough to use, but
+the friction with AWS makes this a challenge. </p>
+<h2>AWS Lambda</h2>
+<p>Recent interest in "microservices" has led to various cloud companies
+offering the ability to execute short-run tasks with minimal overhead. 
+These offerings are still a bit immature and limited. For example,
+<a href="https://aws.amazon.com/lambda/">AWS Lambda</a> gives each lambda task:</p>
+<ul>
+<li>a single Nehalem-generation core (exact performance varies a bit)</li>
+<li>1536 MB of RAM max</li>
+<li>512 MB of <code>/tmp/</code> storage</li>
+<li>300s max execution time. </li>
+<li>a runtime that's either python, node, or Java</li>
+</ul>
+<p>This isn't much, and the runtimes are a limited, although I was 
+curious if it was still enough to do real scientific computing. 
+This is what resulted. </p>
+<h2>Design Goals:</h2>
+<p>Additionally, I really wanted to see if there were an easier way to
+make elastic compute resources available to my non-CS non-devops
+colleagues. I wanted to make Ren's "cloud button" more viable. What I
+really wanted was:</p>
+<ol>
+<li>
+<p>Very little overhead for setup once someone has an AWS account. In
+particular, no persistent overhead -- you don't have to keep a large
+(expensive) cluster up and you don't have to wait 10+ min for a cluster
+to come up.</p>
+</li>
+<li>
+<p>As close to zero overhead for users as possible -- in particular,
+anyone who can write python should be able to invoke it through a
+reasonable interface.</p>
+</li>
+<li>
+<p>Target jobs that run in the minutes-or-more regime. </p>
+</li>
+<li>
+<p>I don't want to run a service. That is, I personally don't want to
+offer the front-end for other people to use, rather, I want to
+directly pay AWS.</p>
+</li>
+<li>
+<p>It has to be from a cloud player that's likely to give out
+an academic grant -- AWS, Google, Azure. There are startups
+in this space that might build cool technology, but often
+don't want to be paid in AWS research credits. </p>
+</li>
+</ol>
+<h2>PyWren</h2>
+<p>So I wrote <a href="https://github.com/ericmjonas/pywren">PyWren</a> in my "spare
+time" (fellow postdocs will get why this is in quotes) to let you do
+exactly this. </p>
+<blockquote>
+<p>The wrens are mostly small, brownish passerine birds in the mainly New World family Troglodytidae. ... Most wrens are small and rather inconspicuous, except for their loud and often complex songs. - Wikipedia</p>
+</blockquote>
+<p>It's a microservices-<a href="https://en.wikipedia.org/wiki/HTCondor">Condor</a>, a Wren! (Working with <a href="https://people.eecs.berkeley.edu/~brecht/">this guy</a> leads to a real focus on ridiculous naming). 
+It's basically just "map-reduce" minus the "reduce"
+using AWS Lambda and some
+awesome
+<a href="https://github.com/cloudpipe/cloudpickle">python serialization technology</a> originally
+developed by a now-defunct company
+called
+<a href="https://www.crunchbase.com/organization/picloud#/entity">PiCloud</a>
+that offered a similar service that I loved. </p>
+<p>The interface is as close to
+the
+<a href="https://docs.python.org/3/library/concurrent.futures.html">Python futures </a> interface
+as I could make it. Right now it basically just supports <code>map(func, data_list)</code>. </p>
+<p>As a trival example, let's add 1 to the first 10 numbers from our laptop. With PyWren
+installed locally:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pywren</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">addone</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="n">wrenexec</span> <span class="o">=</span> <span class="n">pywren</span><span class="o">.</span><span class="n">default_executor</span><span class="p">()</span>
+<span class="n">xlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">futures</span> <span class="o">=</span> <span class="n">wrenexec</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">addone</span><span class="p">,</span> <span class="n">xlist</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">result</span><span class="p">()</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">futures</span><span class="p">]</span>
+</pre></div>
+
+
+<p>The output is as expected:</p>
+<div class="highlight"><pre><span></span>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+</pre></div>
+
+
+<p>Behind the scenes, the following has occurred:</p>
+<ol>
+<li>PyWren, running on your laptop (the <strong>host</strong>), serializes both the
+function <code>addone()</code> along with necessary modules, and the data, and
+sticks both in s3. We call this <strong>host submit</strong></li>
+<li>PyWren then invokes the lambda function. <strong>job start</strong> is reached
+once aws begins calling the lambda function handler. </li>
+<li>The lambda function handler first downloads a full Anaconda python
+   stack, at which point <strong>job setup</strong> is done.</li>
+<li>The handler invokes the function <code>f</code> on the serialized data <code>x</code>
+from within the downloaded python stack.</li>
+<li>When that completes, the result is placed in S3, and we have <strong>job done</strong>. </li>
+<li>On the host, f.result() blocks polling for the existence of the s3
+object, and when it is available downloads and unpickles it.</li>
+</ol>
+<p>Of course, we can do more computationally-intensive actions, like computing
+the product of 1600 random matrices with varying standard deviations. 
+My colleague <a href="http://etrain.github.io/about.html">Evan Sparks</a> pointed
+out that the BLAS operation <code>DGEMM</code> is a great thing to benchmark. So
+here we're running BLAS doing a double dense matrix-matrix multiply,
+and we can measure the total number of FLOPS.  (for the remainder we
+use
+a
+<a href="https://github.com/ericmjonas/pywren/blob/master/examples/benchmark.py">slightly-better instrumented version</a> of
+the below code).</p>
+<div class="highlight"><pre><span></span><span class="n">loopcnt</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="k">def</span> <span class="nf">big_flops</span><span class="p">(</span><span class="n">std_dev</span><span class="p">):</span>
+    <span class="n">running_sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">loopcnt</span><span class="p">:</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">,</span> <span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="mi">4096</span><span class="p">))</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">,</span> <span class="p">(</span><span class="mi">4096</span><span class="p">,</span> <span class="mi">4096</span><span class="p">))</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+        <span class="n">running_sum</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">running_sum</span>
+
+<span class="n">wrenexec</span> <span class="o">=</span> <span class="n">pywren</span><span class="o">.</span><span class="n">default_executor</span><span class="p">()</span>
+<span class="n">std_devs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1600</span><span class="p">)</span>
+<span class="n">futures</span> <span class="o">=</span> <span class="n">wrenexec</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">big_flops</span><span class="p">,</span> <span class="n">std_devs</span><span class="p">)</span>
+<span class="n">pywren</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Now we can plot and track the results:</p>
+<p><a href="/images/pywren.jobs.png"><img src="/images/pywren.jobs.png" style="max-width:100%"></a>
+We can mark when each job was submitted by the host (blue dot), when lambda began processing it
+(green dot), when the initial setup was done (black dot), and when the job itself
+completed (red dot). </p>
+<p>Interesting things to note:</p>
+<ul>
+<li>The rate of submitting jobs is slow, due to network overhead and possibly
+may be some rate-limiting going on via the amazon side. </li>
+<li>Most lambda jobs start very quickly after host submission. The
+variance increases the more active running jobs there are, though.</li>
+<li>Setup can take a while -- for this short job, it's ~20% of the
+execution time, although the jobs themselves take on average ~75
+seconds (less than the 300s max), so there is room to reduce this
+overhead percentage.</li>
+<li>Some jobs finish incredibly quickly, suggesting they are
+running on faster / less-contested hardware. </li>
+<li>There are some real stragglers -- note the cluster of jobs finishing
+  around 180s.</li>
+</ul>
+<p>We can then compute the effective total throughput
+as a function of time (blue line):  including overhead, how many GFLOPS
+did this task run at? We can also compute the total peak
+GFLOPS in flight (green) -- how many simultaneous GFLOPS are being computed at this
+moment, across the entire job pool.
+<a href="/images/pywren.gflops.png"><img src="/images/pywren.gflops.png" style="max-width:100%"></a></p>
+<p>Note the effective flops rises quickly once jobs start returning, and
+then declines slowly as we wait for the stragglers. The blue line peaks
+when the maximum number of simultaneous lambda workers is crunching
+on threads, which <strong>peaks at over 25 TFLOPS</strong>! This feels amazing
+for a bunch of plain-old python processes. </p>
+<h2>Limitations</h2>
+<p>Anti-goals: </p>
+<ol>
+<li>I don't want to support inter-task computation or IPC. I just want a
+<code>map</code> that works as transparently as possible. </li>
+<li>We are not optimizing for tasks with duration &lt; 20s. Overhead is non-trivial </li>
+</ol>
+<p>This isn't a generic compute platform yet -- in addition to the 
+limitations on invidiual lambda processes listed above, marshalling
+the python code intelligently isn't totally debugged, and the 
+small space in <code>/tmp</code> means we're limited in how much of the
+pydata stack we can install on the worker. </p>
+<p>But I am making a bet that the limitations on this sort of worker will
+improve in the near future. To pull this off, I had to e-mail AWS and
+request an increase in simultaneous lambda workers to 2000, which they
+quickly did.  The ideal case is of course a lambda-like service that
+runs arbitrary containers quickly with fixed resource budgets,</p>
+<h2>The future</h2>
+<p>We can make cloud compute easier for scientific computing users. We
+can bring the power of elasticity to the masses. While fun, there
+aren't hard systems challenges here, it's just about polishing things
+well enough to compel regular users.  Indeed, this is a
+place
+<a href="https://www.crunchbase.com/organization/picloud#/entity">a few startups</a> have
+tried to succeed in, although it's most likely not viable as a
+stand-alone business model.  More and more people are starting to try
+and do real work with microservices. My
+friend and colleague <a href="https://cs.stanford.edu/~keithw/">Keith Winstein</a> , for
+example, has been doing amazing research in this space for video
+codecs, and was instrumental in helping me understand the early
+limitations of Lambda. </p>
+<p>So try <a href="https://github.com/ericmjonas/pywren">PyWren</a>
+ out, look in the <a href="https://github.com/ericmjonas/pywren/tree/master/examples"><code>examples</code></a>  directory, and if you're the sort of
+ person who wants to run a lot of small-ish jobs in parallel let me
+ know! </p>
+<p><em>Special thanks to Ren Ng for the original motivitation to actually
+implement this, the PiCloud founders back in 2008 for offering a
+near-identical service back when it was hard, Shivaram Venkataraman
+and Evan Sparks for help in early implementation and real guidance,
+and Keith Winstein for showing me it was possible to run 1000+ lambda
+instances simultaneously, and as always, Ben Recht for letting me
+fool around like this instead of writing papers.</em></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2016 Eric Jonas
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="/theme/js/respond.min.js"></script>
+
+
+</body>
+</html>

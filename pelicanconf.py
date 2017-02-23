@@ -18,6 +18,27 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
+PLUGIN_PATHS = ['/Users/jonas/projects/pywren/pelican-plugins']
+
+PLUGINS = ['i18n_subsites', ]
+
+
+THEME = "/Users/jonas/projects/pywren/pelican-themes/pelican-bootstrap3"
+BOOTSTRAP_THEME = 'flatly' 
+
+HIDE_SIDEBAR=True
+DISPLAY_CATEGORIES_ON_MENU=False
+MENUITEMS=[('blog', "/archives.html")]
+GITHUB_URL="http://github.com/pywren/pywren"
+
+# PLUGINS = ['summary', 'i18n_subsites', 'liquid_tags.img', 'liquid_tags.video',
+#                           'liquid_tags.youtube', 'render_math',
+#              'liquid_tags.include_code', 
+#              'liquid_tags.literal', 'tipue_search']
+JINJA_ENVIRONMENT = {
+    'extensions': ['jinja2.ext.i18n'],
+}
+
 
 # Blogroll
 LINKS = (('Pelican', 'http://getpelican.com/'),

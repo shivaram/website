@@ -24,16 +24,17 @@ PLUGINS = ['i18n_subsites', ]
 
 
 THEME = "pelican-bootstrap3"
-BOOTSTRAP_THEME = 'simplex' 
+BOOTSTRAP_THEME = 'spacelab' 
 
 HIDE_SIDEBAR=True
 DISPLAY_CATEGORIES_ON_MENU=False
 MENUITEMS=[('blog', "/archives.html"),
-           ('getting started', "foo"),
-           ('documentation', "foo"),
-           ("examples", "foo"), 
-           ("blog", "foo"), 
-           ("code", "foo")]
+           ('getting started', "/pages/gettingstarted.html"),
+           ('documentation', "/pages/docs.html"),
+           ("examples", "/pages/examples.html"), 
+           ("code", "http://github.com/pywren/pywren"), 
+           ("bugs", "https://github.com/pywren/pywren/issues"), 
+]
 GITHUB_URL="http://github.com/pywren/pywren"
 
 # PLUGINS = ['summary', 'i18n_subsites', 'liquid_tags.img', 'liquid_tags.video',
@@ -56,6 +57,24 @@ SOCIAL = (('You can add links in your config file', '#'),
           ('Another social link', '#'),)
 
 DEFAULT_PAGINATION = False
+EXTRA_TEMPLATES_PATHS=['./']
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
+#DIRECT_TEMPLATES=['index', 'categories', 'authors', 'archives', 'test']
+#TEMPLATE_PAGES = {'test.html': 'pages/test.html', }
+
+BANNER=True
+BANNER_ALL_PAGES=False
+
+
+# from http://stackoverflow.com/a/30030492
+
+STATIC_PATHS = ['extras', 'images']
+
+EXTRA_PATH_METADATA = {
+    'extras/custom.css': {'path': 'static/custom.css'}
+}
+
+CUSTOM_CSS = 'static/custom.css'
+

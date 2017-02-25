@@ -20,7 +20,7 @@ AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 PLUGIN_PATHS = ['/Users/jonas/projects/pywren/pelican-plugins']
 
-PLUGINS = ['i18n_subsites', ]
+PLUGINS = ['i18n_subsites', 'jinja2content']
 
 
 THEME = "pelican-bootstrap3"
@@ -28,7 +28,7 @@ BOOTSTRAP_THEME = 'spacelab'
 
 HIDE_SIDEBAR=True
 DISPLAY_CATEGORIES_ON_MENU=False
-MENUITEMS=[('blog', "/archives.html"),
+MENUITEMS=[('blog', "/blog.html"),
            ('getting started', "/pages/gettingstarted.html"),
            ('documentation', "/pages/docs.html"),
            ("examples", "/pages/examples.html"), 
@@ -78,3 +78,4 @@ EXTRA_PATH_METADATA = {
 
 CUSTOM_CSS = 'static/custom.css'
 
+INDEX_SAVE_AS = 'blog.html'

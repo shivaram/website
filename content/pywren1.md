@@ -8,6 +8,9 @@ Summary: Can AWS Lambda be used for scientific computing ?
 
 ## Extracting 25 TFLOPS from AWS Lambda, or #TheCloudIsTooDamnHard 
 
+**Note : this blog post originally appeared on ericjonas.com and
+pertains to an earlier version of pywren **
+
 Recently at the Berkeley Center for Computational Imaging weekly
 lunch, my wonderful
 colleague [Shivaram Venkataraman](http://shivaram.org/) from

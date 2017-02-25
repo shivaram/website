@@ -47,11 +47,13 @@
 {% block banner %}
     <div class="jumbotron">
       <div class="container">
+        <div class="row">
+          <div class="container  col-lg-8 col-lg-offset-2"> 
+            
           <h1>pywren</h1>
-          Pywren lets you run your existing python code on elastic cloud
-          infrastcture with dynamic scaling. Pywren lets you run your existing python code on elastic cloud
-          infrastcture with dynamic scaling. Pywren lets you run your existing python code on elastic cloud
-          infrastcture with dynamic scaling. 
+          Pywren lets you run your existing python code at massive scale via AWS Lambda
+          </div>
+        </div>
       </div>
     </div>
 {% endblock %}
@@ -72,6 +74,9 @@
             {% if page.comments == 'enabled' %}
                 {% include 'includes/comments.html' %}
             {% endif %}
-        </div>
+            </div>
+            {% for article in (articles_page.object_list if articles_page else articles) %}
+              {{article.date.strftime('%Y-%m-%d') }} <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a> - {{article.summary | striptags}} <p>
+        {% endfor %}
     </section>
 {% endblock %}

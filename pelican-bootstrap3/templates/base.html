@@ -103,8 +103,10 @@
 <body>
 
 <div class="navbar {% if BOOTSTRAP_NAVBAR_INVERSE %}navbar-inverse{% else %}navbar-default{% endif %} navbar-fixed-top" role="navigation">
-	<div class="container{% if BOOTSTRAP_FLUID %}-fluid{% endif %}">
-        <div class="navbar-header">
+  <div class="container{% if BOOTSTRAP_FLUID %}-fluid{% endif %} ">
+    <div class="row">
+      <div class="container  col-lg-8 col-lg-offset-2"> 
+        <div class="navbar-header ">
             {% if MENUITEMS or (pages and DISPLAY_PAGES_ON_MENU) or (categories and DISPLAY_CATEGORIES_ON_MENU) %}
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -157,6 +159,7 @@
             </ul>
         </div>
         <!-- /.navbar-collapse -->
+        </div> </div>
     </div>
 </div> <!-- /.navbar -->
 <!-- Banner -->
@@ -171,7 +174,7 @@
         {% if not HIDE_SIDEBAR or ABOUT_ME or AVATAR %}
         <div class="col-sm-9">
         {% else %}
-        <div class="col-lg-12">
+        <div class="col-lg-8 col-lg-offset-2 ">
         {% endif %}
         {% block breadcrumbs %}
         {% endblock %}

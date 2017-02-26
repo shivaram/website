@@ -19,6 +19,38 @@ pwex = pywren.default_executor()
 res = pwex.map(foo, np.linspace(0.1, 100, 1000))
 ```
 
+## Scaling Examples
+<div class="row">
+<div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="images/microbench_flops.flops_with_insert.png" alt="...">
+      <div class="caption">
+        <h5> 80 GB/sec <a href=#">[more]</a> </h5>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="images/microbench_s3_thru.s3_agg_tput_combined.png" alt="...">
+      <div class="caption">
+        <h5> 80 GB/sec <a href=#">[more]</a> </h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="images/microbench_redis.redis_read_write_128b_combined.png" alt="...">
+      <div class="caption">
+        <h5> 1M transactions/sec <a href=#">[more]</a> </h5>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
 ## Getting started
 
 First, make sure you have an account

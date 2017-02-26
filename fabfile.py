@@ -86,8 +86,16 @@ def publish():
         extra_opts='-c',
     )
 
-def gh_pages():
+def github_deploy():
     """Publish to GitHub Pages"""
     rebuild()
-    local("ghp-import -r pywren.github.io -b master output/ -p -c pywren.io")
+    local("rm -Rf upload.staging")
+    local("mkdir upload.staging")
+    with lcd("upload.staging"):
+        local("git clone git@github.com:pywren/pywren.github.io.git")
+        local("cp -R ../output/* pywren.github.io")
+        with lcd("pywren.github.io"):
 
+            local("git commit -a -m 'update'")
+            local("git push origin master")
+    

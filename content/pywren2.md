@@ -1,10 +1,10 @@
 Title: Microservices and Terabits
 Date: 2016-10-27
 Tags: python
-Category: benchmarks
+Category: benchmarks, s3
 Slug: pywren_s3
 Author: Eric Jonas
-Summary: Using Pywren to benchmark S3
+Summary: Using Pywren to benchmark S3, we achieve over 80 GB/sec of read performance and 60 GB/sec of write performance using Amazon S3. 
 
 ## Making S3 (almost) as fast as local memory
 

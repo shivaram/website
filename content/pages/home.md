@@ -5,7 +5,7 @@ Authors: Alexis Metaireau, Conan Doyle
 Summary: Short version for index and feeds
 save_as: index.html
 status: hidden
-template: test
+template: home
 
 ## Overview
 

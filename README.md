@@ -30,7 +30,7 @@ Be sure to add the website deploy dir as a remote
 git remote add pywren.github.io git@github.com:pywren/pywren.github.io.git
 ```
 
-then run `fab gh_pages`
+then run `fab github_deploy`
 
 
 ### How to control the order of pages in the index? 

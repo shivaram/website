@@ -1,10 +1,10 @@
 Title: Microservices and Teraflops
 Date: 2016-10-25
-Tags: python
+Tags: benchmarks, compute
 Category: benchmarks
 Slug: pywren
 Author: Eric Jonas
-Summary: Can AWS Lambda be used for scientific computing ?
+Summary: Can AWS Lambda be used for scientific computing ? Here we use a new platform, pywren, to achieve over 25 TFLOPS using pure python across thousands of simultaneous workers. 
 
 ## Extracting 25 TFLOPS from AWS Lambda, or #TheCloudIsTooDamnHard 
 

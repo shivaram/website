@@ -1,8 +1,8 @@
-Title: home
+Title: pywren -- run your python code on thousands of cores
 skiptitle: True
 Slug: home
-Authors: Alexis Metaireau, Conan Doyle
-Summary: Short version for index and feeds
+Authors: Eric Jonas
+Summary: Pywren uses AWS Lambda to effortlessly run your existing python code on thousands of machines in the cloud 
 save_as: index.html
 status: hidden
 template: home

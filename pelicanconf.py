@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = u'Eric Jonas'
+AUTHOR = u'University of California, Berkeley'
 SITENAME = u'pywren'
 SITEURL = ''
 

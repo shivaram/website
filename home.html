@@ -76,7 +76,13 @@
             {% endif %}
             </div>
             {% for article in (articles_page.object_list if articles_page else articles) %}
-             <span class="label label-default"> {{article.date.strftime('%Y-%m-%d') }} </span> &nbsp;<b><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></b> - {{article.summary | striptags}} <p>
+            <span class="label label-default"> {{article.date.strftime('%Y-%m-%d') }} </span> &nbsp;<b><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></b> - {{article.summary | striptags}} <p>
         {% endfor %}
+
+        <h3> Support </h3>
+        PyWren is developed and supported by:<p>
+        <img src="/images/bcci.png"></img> 
+        <a href="https://rise.cs.berkeley.edu/"> <img src="/images/riselab.small.png"></img> </a>
+        
     </section>
 {% endblock %}

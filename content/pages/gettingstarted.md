@@ -5,52 +5,33 @@ Summary: Short version for index and feeds
 status: hidden
 
 
-To get started, make sure you have an AWS account, and install pywren.
+To get started, make sure you have an AWS account, and install pywren. You
+can do the installation from either pypi
 
+```console
+$ pip install pywren
 ```
-pip install pywren
-```
+or from the [git repository](https://github.com/pywren/pywren/). This
+installs the pywren library as well as the `pywren` command-line tool. 
 
 ### Check that your AWS credentials are setup correctly
+You need to be sure you have set up your AWS creditials. 
 
-```
-pywren aws_check
-```
-
-### Walk through setup script
-
-
-### First example
-
-
-### When things go wrong
-
-1. getting the logs
-
-2. filing an issue
-
-3. 
-
-
-## Getting started
-
-First, make sure you have boto set up to use your AWS credentials and
-have a sane python installation (I recommend [Anaconda](https://www.continuum.io/downloads )). Clone the repo from git and invoke:
-
-```
-python setup.py install
+```console
+$ pywren get_aws_account_id
+Your AWS account ID is 942315755674
 ```
 
 Before you get started, make sure you have your AWS credentials set up 
-properly for use via Boto. You also need a s3 bucket that you can write to 
+properly for use via Boto. You also need a S3 bucket that you can write to 
 to save data and retrieve results. 
 
 Run the following from the prompt:
 
-```
-pywren create_config --bucket_name YOUR_S3_BUCKET_NAME
-pywren create_role
-pywren deploy_lambda
+```console
+$ pywren create_config --bucket_name YOUR_S3_BUCKET_NAME
+$ pywren create_role
+$ pywren deploy_lambda
 ```
 
 1. This will create a default configuration file and place it in `~/.pywren_config`. 
@@ -61,12 +42,17 @@ pywren deploy_lambda
 
 ### Testing
 
-You should now be able to run `examples/simpletest.py`. You should see the following:
+You should now be able to run a test function . You should see the following:
 
+```console
+$ pywren test_function
+
+function returned: Hello world
 ```
-# python examples/simpletest.py
-# Linux ip-10-13-24-185 4.4.19-29.55.amzn1.x86_64 #1 SMP Mon Aug 29 23:29:40 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
-```
+
+### Next steps
+Check out [the examples](https://github.com/pywren/examples)
+
 
 ## Debugging (When things go wrong)
 

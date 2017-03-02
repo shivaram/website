@@ -31,7 +31,7 @@ DISPLAY_CATEGORIES_ON_MENU=False
 MENUITEMS=[('blog', "/blog.html"),
            ('getting started', "/pages/gettingstarted.html"),
            ('documentation', "/pages/docs.html"),
-           ("examples", "/pages/examples.html"), 
+           ("examples", "https://github.com/pywren/examples/"), 
            ("code", "http://github.com/pywren/pywren"), 
            ("bugs", "https://github.com/pywren/pywren/issues"), 
 ]
@@ -79,3 +79,14 @@ EXTRA_PATH_METADATA = {
 CUSTOM_CSS = 'static/custom.css'
 
 INDEX_SAVE_AS = 'blog.html'
+
+PYGMENTS_STYLE='friendly'
+
+MARKDOWN = {
+    'extension_configs': {
+        'markdown.extensions.codehilite': {'css_class': 'fooo', 'lalala' : "whatever"},
+        'markdown.extensions.extra': {},
+        'markdown.extensions.meta': {},
+    },
+    'output_format': 'html5',
+}

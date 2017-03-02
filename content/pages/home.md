@@ -8,45 +8,37 @@ status: hidden
 template: home
 
 ## Overview
-
 ```python
-def foo(b):
+  def my_function(b):
     x = np.random.normal(0, b, 1024)
     A = np.random.normal(0, b, (1024, 1024))
     return np.dot(A, x)
 
-pwex = pywren.default_executor()
-res = pwex.map(foo, np.linspace(0.1, 100, 1000))
+  pwex = pywren.default_executor()
+  res = pwex.map(my_function, np.linspace(0.1, 100, 1000))
 ```
 
 ## Scaling Examples
 <div class="row">
-<div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img src="images/microbench_flops.flops_with_insert.png" alt="...">
-      <div class="caption">
-        <h5> 80 GB/sec <a href=#">[more]</a> </h5>
-      </div>
+    <div class="col-sm-4 col-md-4">
+        <div class="thumbnail">
+        <img src="images/flops_scaling.flops.small.png" alt="...">
+        <div class="caption">
+        <h5> 40 TFLOPS on Lambda <a href="https://github.com/pywren/examples/tree/benchmark_flops">[more]</a> </h5>
+        </div>
+        </div>
     </div>
-  </div>
-  
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img src="images/microbench_s3_thru.s3_agg_tput_combined.png" alt="...">
-      <div class="caption">
-        <h5> 80 GB/sec <a href=#">[more]</a> </h5>
-      </div>
+        <div class="col-sm-4 col-md-4">
+        <div class="thumbnail">
+        <img src="images/s3_scaling.s3_agg_tput.png" alt="...">
+        <div class="caption">
+        <h5> 80 GB/sec read and 60 GB/s write to S3 <a href="https://github.com/pywren/examples/tree/master/benchmark_s3">[more]</a> </h5>
+        </div>
+        </div>
     </div>
-  </div>
 
-  <div class="col-sm-6 col-md-4">
-    <div class="thumbnail">
-      <img src="images/microbench_redis.redis_read_write_128b_combined.png" alt="...">
-      <div class="caption">
-        <h5> 1M transactions/sec <a href=#">[more]</a> </h5>
-      </div>
-    </div>
-  </div>
+
+  <!-- </div> -->
   
 </div>
 

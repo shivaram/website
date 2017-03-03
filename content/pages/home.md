@@ -65,6 +65,7 @@ The overall goal is to [mimic the Python 3.x futures interface](http://pythonhos
 much as make sense. 
 
 Key Limitations:
+
 * low limit of simultaneous workers (maybe 3k if you reserve ahead)
 * finite amount of time per worker (300 seconds), but [see support for stand-alone workers!]
 * non-trivial function invocation overhead, sometimes 15 sec! 

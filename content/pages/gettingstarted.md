@@ -1,7 +1,7 @@
 Title: getting started
 Slug: gettingstarted
-Authors: Alexis Metaireau, Conan Doyle
-Summary: Short version for index and feeds
+Authors: pywren
+Summary: Getting started with pywren
 status: hidden
 
 
@@ -23,22 +23,22 @@ Your AWS account ID is 942315755674
 ```
 
 Before you get started, make sure you have your AWS credentials set up 
-properly for use via Boto. You also need a S3 bucket that you can write to 
-to save data and retrieve results. 
+properly for use via Boto. 
 
 Run the following from the prompt:
 
 ```console
-$ pywren create_config --bucket_name YOUR_S3_BUCKET_NAME
+$ pywren create_config 
 $ pywren create_role
+$ pywren create_bucket
 $ pywren deploy_lambda
 ```
 
 1. This will create a default configuration file and place it in `~/.pywren_config`. 
 2. Create the default IAM role to run the lambda process as `pywren_exec_role`
 3. Deploy the lambda function to AWS using your account as `pywren1`. 
-4. Place all intermediate data in `$YOUR_S3_BUCKET_NAME/pywren.jobs`. 
-
+4. Create a bucket in your default AZ named `pywren-bucket`
+4. Place all intermediate data in `pywren-bucket/pywren.jobs`. 
 
 ### Testing
 

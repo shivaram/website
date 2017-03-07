@@ -4,8 +4,7 @@ Tags: releases
 Category: releases
 Slug: release-0.1
 Author: Eric Jonas
-Summary: Annoucing PyWren 0.1, with Python 3 support, large-scale reducers, better logging, and a new website! 
-status: draft
+Summary: Annoucing PyWren 0.1, with Python 3 support, large-scale reducers, better logging, support for running on arbitray instances, and a new website! 
 
 Today we're excited to annouce the latest version of PyWren, version 0.1. This
 is our first release with a stand-alone mode, a `reduce` verb, and Python 3 support. 
@@ -67,7 +66,7 @@ full Python 3 support and Python 3.5 and 3.6 are fully-supported runtimes.
 ## Other improvements:
 
 * New website, [pywren.io](http://pywren.io)
-* Additional contributors, especially [Qifan Pu](https://people.eecs.berkeley.edu/~qifan/) and [Shivaram Venkataraman](http://shivaram.org/), and support from both the Berkeley Center for Computational Imaging (via [Ben Recht](https://people.eecs.berkeley.edu/~brecht/)) and the [UC Berkeley RISE Lab ](https://rise.cs.berkeley.edu/) (thanks to [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/)
+* Additional contributors, especially [Qifan Pu](https://people.eecs.berkeley.edu/~qifan/) and [Shivaram Venkataraman](http://shivaram.org/), and support from both the Berkeley Center for Computational Imaging (via [Ben Recht](https://people.eecs.berkeley.edu/~brecht/)) and the [UC Berkeley RISE Lab ](https://rise.cs.berkeley.edu/) (thanks to [Ion Stoica](https://people.eecs.berkeley.edu/~istoica/) ) 
 * Installable via PyPi
 * Improved error handling and catching of exceptions
 

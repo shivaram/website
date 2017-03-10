@@ -24,7 +24,7 @@ template: home
         <div class="thumbnail">
         <img src="images/flops_scaling.flops.small.png" alt="...">
         <div class="caption">
-        <h5> 40 TFLOPS on Lambda <a href="https://github.com/pywren/examples/tree/benchmark_flops">[more]</a> </h5>
+        <h5> 40 TFLOPS on Lambda <a href="https://github.com/pywren/examples/tree/master/benchmark_flops">[more]</a> </h5>
         </div>
         </div>
     </div>
